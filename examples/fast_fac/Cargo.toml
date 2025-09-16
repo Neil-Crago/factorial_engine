@@ -1,0 +1,9 @@
+[package]
+name = "fast_fac"
+version = "0.1.1"
+edition = "2024"
+authors = ["Neil Crago"]
+
+[dependencies]
+fractal_algebra = "0.3.2"
+factorial_engine = "0.1.3"
