@@ -1,8 +1,9 @@
+/// A library for producing factorials
+/// A high-performance engine for computing the prime factorization of factorials
+/// using Legendre's Formula to avoid calculating large numbers,
+/// ensuring speed and zero overflow errors.
 use std::collections::HashMap;
 
-/// A high-performance engine for computing the prime factorization of factorials.
-/// It uses Legendre's Formula to avoid calculating large numbers, ensuring
-/// speed and zero overflow errors.
 pub struct FactorialEngine {
     primes_cache: Vec<u64>,
 }
