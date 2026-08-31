@@ -6,4 +6,4 @@ authors = ["Neil Crago"]
 
 [dependencies]
 fractal_algebra = "0.3.2"
-factorial_engine = "0.1.3"
+factorial_engine = { path = "../.." }

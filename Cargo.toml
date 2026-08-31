@@ -1,13 +1,17 @@
 [package]
 name = "factorial_engine"
-version = "0.2.0"
+version = "0.4.0"
 edition = "2024"
+rust-version = "1.98"
 authors = ["Neil Crago"]
 description = "A library for producing factorials"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Neil-Crago/factorial_engine"
 documentation = "https://docs.rs/factorial_engine"
-keywords = ["mathematics", "factorial"]
-
+readme = "README.md"
+keywords = ["mathematics", "factorial", "legendre", "gamma", "stirling"]
+categories = ["mathematics", "algorithms"]
 
 [dependencies]
+num-bigint = "0.4"
+num-traits = "0.2"
