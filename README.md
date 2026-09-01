@@ -26,7 +26,7 @@ Add this crate to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-factorial_engine = "0.3.0" # Or the latest version
+factorial_engine = "0.4" # Or the latest version
 ```
 
 ## Example
