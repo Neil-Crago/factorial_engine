@@ -9,6 +9,12 @@ A high-performance, zero-error Rust crate for computing the prime factorization 
 
 This engine is designed as a robust, backend computational tool. It uses **Legendre's Formula** to calculate prime exponents directly, completely avoiding the need to compute or store the immense values of `n!` itself. This ensures exceptional performance and prevents any possibility of integer overflow, even for very large `n`.
 
+For fixed-width integer inputs, the crate also includes a deterministic primality check built directly from the symbolic factorization of `n!`. In the `u64` range, the identity
+
+`n` is prime if and only if `n! mod n^2 != 0`
+
+can be evaluated symbolically, with the small edge cases handled explicitly. This makes it a fast, reliable symbolic-factorial test for practical fixed-width use cases.
+
 ## Features
 
 - **High Performance:** Employs Legendre's Formula for direct calculation of prime exponents.
@@ -16,6 +22,7 @@ This engine is designed as a robust, backend computational tool. It uses **Legen
 - **Efficient Prime Generation:** Includes an optimized Sieve of Eratosthenes for on-demand prime generation and caching.
 - **Symbolic Factorials:** [`SymbolicFactorial`] represents `n!` as a displayable prime factorization (e.g. `2^47 × 3^22 × 5^12 × ...`).
 - **Symbolic Arithmetic:** `multiply`, `checked_divide`, and `pow` combine symbolic factorials (e.g. for binomial coefficients) without ever computing the underlying integers.
+- **Deterministic Primality Testing:** `FactorialEngine::is_prime_factorial` checks primality using the symbolic representation of `n!` for `u64`-sized inputs.
 - **BigUint Support:** `to_biguint`, `FactorialEngine::factorial_biguint`, and `FactorialEngine::binomial` materialize exact, arbitrary-precision results via [`num-bigint`](https://crates.io/crates/num-bigint) only when you actually need the number.
 - **Reverse Factorial:** [`reverse_factorial`] recovers `n` from a candidate factorial value, e.g. `reverse_factorial(120) == Ok(5)`.
 - **Clean API:** Provides a simple and clear interface for getting the full symbolic factorization of `n!`.
@@ -58,6 +65,35 @@ fn main() {
     assert_eq!(engine.binomial(5, 2), Some(10u32.into()));
 }
 ```
+
+## Deterministic primality testing with symbolic factorials
+
+This crate can also test whether a number is prime using the symbolic factorization of `n!`.
+
+```rust
+use factorial_engine::FactorialEngine;
+
+fn main() {
+    let mut engine = FactorialEngine::new(None);
+
+    for n in 2..=20 {
+        let is_prime = FactorialEngine::is_prime_factorial(n, &mut engine);
+        println!("{} is prime? {}", n, is_prime);
+    }
+
+    // The primality test is deterministic for fixed-width integer inputs and uses
+    // the symbolic factorial representation directly.
+    let n = 13;
+    let fact = engine.symbolic_factorial(n);
+    let n_squared = n.checked_mul(n).unwrap();
+    let is_prime_via_symbolic_factorial = fact.modulo_u64(n_squared) != 0;
+
+    assert!(is_prime_via_symbolic_factorial);
+    assert!(FactorialEngine::is_prime_factorial(13, &mut engine));
+}
+```
+
+This is a specialized, deterministic primality check for `u64`-sized inputs, using the fact that `n! mod n^2 != 0` for primes `n > 4`, with the small edge cases handled explicitly. For larger values, use the symbolic divisibility primitives directly rather than treating this as a general arbitrary-precision primality API.
 
 ## Purpose
 

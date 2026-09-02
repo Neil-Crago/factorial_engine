@@ -116,6 +116,47 @@ impl SymbolicFactorial {
                 acc * BigUint::from(p).pow(e as u32)
             })
     }
+
+    /// Computes `(self) % m` efficiently without expanding to a BigUint.
+    /// This is perfect for evaluating remainders against standard integers.
+    pub fn modulo_u64(&self, m: u64) -> u64 {
+        if m <= 1 {
+            return 0;
+        }
+        
+        let mut result: u128 = 1;
+        let modulus = m as u128;
+        
+        for (&p, &e) in &self.factors {
+            // mod_pow(base, exponent, modulus)
+            let term = Self::mod_pow(p as u128, e as u128, modulus);
+            result = (result * term) % modulus;
+        }
+        
+        result as u64
+    }
+
+    /// Internal helper for modular exponentiation: (base^exp) % modulus
+    fn mod_pow(mut base: u128, mut exp: u128, modulus: u128) -> u128 {
+        let mut res = 1;
+        base %= modulus;
+        while exp > 0 {
+            if exp % 2 == 1 {
+                res = (res * base) % modulus;
+            }
+            base = (base * base) % modulus;
+            exp /= 2;
+        }
+        res
+    }
+
+    /// Checks if this symbolic factorial is perfectly divisible by another.
+    /// This is functionally equivalent to checking if `self % rhs == 0`.
+    pub fn is_divisible_by(&self, rhs: &Self) -> bool {
+        rhs.factors.iter().all(|(&p, &e)| self.exponent_of(p) >= e)
+    }
+
+   
 }
 
 impl Mul for &SymbolicFactorial {
@@ -268,6 +309,27 @@ impl FactorialEngine {
     pub fn get_factorial_factorization(&mut self, n: u64) -> std::collections::HashMap<u64, u64> {
         self.symbolic_factorial(n).factors.into_iter().collect()
     }
+
+ /// Checks if a given number `n` is prime using the factorial trick.
+    /// This method computes `n! % n^2` symbolically and checks if the result is non-zero.
+    /// It is a deterministic primality test for numbers that fit within u64.
+    /// and much faster than AKS for numbers within this range.
+    pub fn is_prime_factorial(n: u64, engine: &mut FactorialEngine) -> bool {
+    // Handle edge cases
+    if n < 2 { return false; }
+    if n == 2 || n == 3 || n == 4 { return n != 4; }
+
+    // Check if n overflows u64 when squared. 
+    // If n <= 4_294_967_295, n^2 fits in u64.
+    let n_squared = n.checked_mul(n).expect("n^2 exceeds u64 limit");
+
+    // Compute symbolic representation of n!
+    let fact = engine.symbolic_factorial(n);
+
+    // The trick: n! % n^2 != 0 if and only if n is prime
+    fact.modulo_u64(n_squared) != 0
+}
+
 }
 
 /// Finds the integer `n` such that `n! == value`, if one exists.
@@ -377,4 +439,24 @@ mod tests {
         );
         assert_eq!(reverse_factorial(0), Err(FactorialError::NotAFactorial(0)));
     }
+
+    #[test]
+    fn symbolic_factorial_modulo_u64() {
+        let mut engine = FactorialEngine::new(None);
+        let six_factorial = engine.symbolic_factorial(6); // 6! = 720
+        assert_eq!(six_factorial.modulo_u64(7), 720 % 7);
+        assert_eq!(six_factorial.modulo_u64(10), 720 % 10);
+        assert_eq!(six_factorial.modulo_u64(1), 0);
+    }
+
+    #[test]
+    fn is_prime_factorial_works() {
+        let mut engine = FactorialEngine::new(None);
+        assert!(FactorialEngine::is_prime_factorial(2, &mut engine));
+        assert!(FactorialEngine::is_prime_factorial(3, &mut engine));
+        assert!(!FactorialEngine::is_prime_factorial(4, &mut engine));
+        assert!(FactorialEngine::is_prime_factorial(5, &mut engine));
+        assert!(!FactorialEngine::is_prime_factorial(6, &mut engine));
+    }
+
 }

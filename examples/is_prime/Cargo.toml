@@ -1,0 +1,8 @@
+[package]
+name = "is_prime"
+version = "0.1.0"
+authors = ["Neil Crago"]
+edition = "2024"
+
+[dependencies]
+factorial_engine = { path = "../.." }

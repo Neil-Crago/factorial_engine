@@ -22,13 +22,17 @@ checksum = "de944a0e7086e29b07b9e8d3d722d7d44492aa574d06a09a7599a8c5341d534e"
 
 [[package]]
 name = "factorial_engine"
-version = "0.3.0"
+version = "0.4.1"
+dependencies = [
+ "num-bigint",
+ "num-traits",
+]
 
 [[package]]
 name = "fast_fac"
 version = "0.1.1"
 dependencies = [
- "factorial_engine 0.3.0",
+ "factorial_engine 0.4.1",
  "fractal_algebra",
 ]
 
@@ -70,10 +74,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
 
 [[package]]
+name = "num-bigint"
+version = "0.4.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c89e69e7e0f03bea5ef08013795c25018e101932225a656383bd384495ecc367"
+dependencies = [
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
 name = "num-complex"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73f88a1307638156682bada9d7604135552957b7818057dcef22705b4d509495"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
+name = "num-integer"
+version = "0.1.47"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b"
 dependencies = [
  "num-traits",
 ]
