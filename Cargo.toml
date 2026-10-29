@@ -1,10 +1,9 @@
 [package]
 name = "factorial_engine"
-version = "0.4.2"
+version = "0.4.3"
 edition = "2024"
-rust-version = "1.98"
 authors = ["Neil Crago"]
-description = "A library for producing factorials"
+description = "A high-performance, zero-error Rust crate for computing the prime factorization of factorials (n!). It includes Symbolic Factorials, Symbolic Arithmetic, Deterministic Primality Testing, BigUint Support, Reverse Factorial and a Clean API."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/Neil-Crago/factorial_engine"
 documentation = "https://docs.rs/factorial_engine"
