@@ -1,3 +1,7 @@
+/// Example usage of the factorial_engine crate.
+/// Demonstrates symbolic factorial calculation, exponent extraction, and reverse factorial functionality.
+/// This example covers initializing the engine, computing the symbolic factorial of 50!,
+/// extracting the exponent of a prime factor, and using the reverse factorial function.
 use factorial_engine::{reverse_factorial, FactorialEngine};
 
 fn main() {

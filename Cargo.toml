@@ -1,6 +1,6 @@
 [package]
 name = "factorial_engine"
-version = "0.4.3"
+version = "0.5.0"
 edition = "2024"
 authors = ["Neil Crago"]
 description = "A high-performance, zero-error Rust crate for computing the prime factorization of factorials (n!). It includes Symbolic Factorials, Symbolic Arithmetic, Deterministic Primality Testing, BigUint Support, Reverse Factorial and a Clean API."
